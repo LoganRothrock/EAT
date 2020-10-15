@@ -3,11 +3,23 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.1231
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StoreFront.UI.MVC", "StoreFront.UI.MVC\StoreFront.UI.MVC.csproj", "{07CF93C2-42AA-46D1-9472-85993D143BA9}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{07CF93C2-42AA-46D1-9472-85993D143BA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07CF93C2-42AA-46D1-9472-85993D143BA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07CF93C2-42AA-46D1-9472-85993D143BA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07CF93C2-42AA-46D1-9472-85993D143BA9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {D865D567-8F78-43B4-BF29-3E402CAA5DB2}
+		SolutionGuid = {55AEA66A-6AD3-4A9F-9FA3-D1DC7D4242EC}
 	EndGlobalSection
 EndGlobal
