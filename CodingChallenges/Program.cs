@@ -10,7 +10,20 @@ namespace CodingChallenges
     {
         static void Main(string[] args)
         {
-
+            #region MultiplesOf3And5
+                int runningTotal = 0;
+                //For loop to find the 3 and 5 multiples. 
+                // change limit in (i < (limit)) to set a limit
+                for (int i = 1; i < 1000; i++)
+                {
+                    if (i % 3 == 0 || i % 5 == 0)
+                    {
+                        Console.WriteLine(i);
+                        runningTotal += i;
+                    }
+                }
+                Console.WriteLine(runningTotal);
+            #endregion
         }
     }
 }
