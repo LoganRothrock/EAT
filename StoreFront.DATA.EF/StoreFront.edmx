@@ -4,12 +4,12 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="StoreFrontModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="StoreFrontModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Craftsman">
           <Key>
             <PropertyRef Name="CraftsmanID" />
           </Key>
-          <Property Name="CraftsmanName" Type="nvarchar" MaxLength="50" />
+          <Property Name="CraftsmanName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Secialization" Type="nvarchar" MaxLength="50" />
           <Property Name="CraftsmanID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
         </EntityType>
@@ -27,6 +27,7 @@
           <Property Name="EmployeeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="EmployeeName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="DirectReportID" Type="int" />
+          <Property Name="DepartmentID" Type="int" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'StoreFront.dbo.Products' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -37,7 +38,6 @@ warning 6002: The table/view 'StoreFront.dbo.Products' does not have a primary k
             <PropertyRef Name="ProductTypeID" />
             <PropertyRef Name="Price" />
             <PropertyRef Name="UnitsSold" />
-            <PropertyRef Name="Discontinued" />
             <PropertyRef Name="DepartmentID" />
             <PropertyRef Name="CraftsmanID" />
           </Key>
@@ -48,9 +48,8 @@ warning 6002: The table/view 'StoreFront.dbo.Products' does not have a primary k
           <Property Name="Price" Type="money" Nullable="false" />
           <Property Name="UnitsSold" Type="int" Nullable="false" />
           <Property Name="InStock" Type="bit" />
-          <Property Name="Discontinued" Type="bit" Nullable="false" />
+          <Property Name="Discontinued" Type="bit" />
           <Property Name="DepartmentID" Type="int" Nullable="false" />
-          <Property Name="EmployeeID" Type="int" />
           <Property Name="DateOnShelf" Type="date" />
           <Property Name="CraftsmanID" Type="int" Nullable="false" />
         </EntityType>
@@ -61,26 +60,30 @@ warning 6002: The table/view 'StoreFront.dbo.Products' does not have a primary k
           <Property Name="ProductTypeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ProductTypeName" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
-        <EntityType Name="Requests">
-          <Key>
-            <PropertyRef Name="RequestID" />
-          </Key>
-          <Property Name="RequestID" Type="int" Nullable="false" />
-          <Property Name="RequestDescription" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="RequestReward" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="DatePutUp" Type="date" />
-          <Property Name="RequestPosterName" Type="nvarchar" MaxLength="50" />
-        </EntityType>
-        <EntityType Name="sysdiagrams">
-          <Key>
-            <PropertyRef Name="diagram_id" />
-          </Key>
-          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="principal_id" Type="int" Nullable="false" />
-          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="version" Type="int" />
-          <Property Name="definition" Type="varbinary(max)" />
-        </EntityType>
+        <Association Name="FK_Employee_Department">
+          <End Role="Department" Type="Self.Department" Multiplicity="1" />
+          <End Role="Employee" Type="Self.Employee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Department">
+              <PropertyRef Name="DepartmentID" />
+            </Principal>
+            <Dependent Role="Employee">
+              <PropertyRef Name="DepartmentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Employee_Employee">
+          <End Role="Employee" Type="Self.Employee" Multiplicity="0..1" />
+          <End Role="Employee1" Type="Self.Employee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employee">
+              <PropertyRef Name="EmployeeID" />
+            </Principal>
+            <Dependent Role="Employee1">
+              <PropertyRef Name="DirectReportID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Products_Craftsman">
           <End Role="Craftsman" Type="Self.Craftsman" Multiplicity="1" />
           <End Role="Products" Type="Self.Products" Multiplicity="*" />
@@ -102,18 +105,6 @@ warning 6002: The table/view 'StoreFront.dbo.Products' does not have a primary k
             </Principal>
             <Dependent Role="Products">
               <PropertyRef Name="DepartmentID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Products_Employee">
-          <End Role="Employee" Type="Self.Employee" Multiplicity="0..1" />
-          <End Role="Products" Type="Self.Products" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Employee">
-              <PropertyRef Name="EmployeeID" />
-            </Principal>
-            <Dependent Role="Products">
-              <PropertyRef Name="EmployeeID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -134,8 +125,6 @@ warning 6002: The table/view 'StoreFront.dbo.Products' does not have a primary k
           <EntitySet Name="Department" EntityType="Self.Department" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Employee" EntityType="Self.Employee" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ProductType" EntityType="Self.ProductType" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Requests" EntityType="Self.Requests" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Products" EntityType="Self.Products" store:Type="Tables" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [Products].[ProductID] AS [ProductID], 
@@ -147,11 +136,18 @@ warning 6002: The table/view 'StoreFront.dbo.Products' does not have a primary k
     [Products].[InStock] AS [InStock], 
     [Products].[Discontinued] AS [Discontinued], 
     [Products].[DepartmentID] AS [DepartmentID], 
-    [Products].[EmployeeID] AS [EmployeeID], 
     [Products].[DateOnShelf] AS [DateOnShelf], 
     [Products].[CraftsmanID] AS [CraftsmanID]
     FROM [dbo].[Products] AS [Products]</DefiningQuery>
           </EntitySet>
+          <AssociationSet Name="FK_Employee_Department" Association="Self.FK_Employee_Department">
+            <End Role="Department" EntitySet="Department" />
+            <End Role="Employee" EntitySet="Employee" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Employee_Employee" Association="Self.FK_Employee_Employee">
+            <End Role="Employee" EntitySet="Employee" />
+            <End Role="Employee1" EntitySet="Employee" />
+          </AssociationSet>
           <AssociationSet Name="FK_Products_Craftsman" Association="Self.FK_Products_Craftsman">
             <End Role="Craftsman" EntitySet="Craftsman" />
             <End Role="Products" EntitySet="Products" />
@@ -160,73 +156,79 @@ warning 6002: The table/view 'StoreFront.dbo.Products' does not have a primary k
             <End Role="Department" EntitySet="Department" />
             <End Role="Products" EntitySet="Products" />
           </AssociationSet>
-          <AssociationSet Name="FK_Products_Employee" Association="Self.FK_Products_Employee">
-            <End Role="Employee" EntitySet="Employee" />
-            <End Role="Products" EntitySet="Products" />
-          </AssociationSet>
           <AssociationSet Name="FK_Products_ProductType1" Association="Self.FK_Products_ProductType1">
             <End Role="ProductType" EntitySet="ProductType" />
             <End Role="Products" EntitySet="Products" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="StoreFrontModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="StoreFrontEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Craftsmen" EntityType="StoreFrontModel.Craftsman" />
+          <EntitySet Name="Departments" EntityType="StoreFrontModel.Department" />
+          <EntitySet Name="Employees" EntityType="StoreFrontModel.Employee" />
+          <EntitySet Name="ProductTypes" EntityType="StoreFrontModel.ProductType" />
+          <EntitySet Name="Products" EntityType="StoreFrontModel.Product" />
+          <AssociationSet Name="FK_Products_Craftsman" Association="StoreFrontModel.FK_Products_Craftsman">
+            <End Role="Craftsman" EntitySet="Craftsmen" />
+            <End Role="Product" EntitySet="Products" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Employee_Department" Association="StoreFrontModel.FK_Employee_Department">
+            <End Role="Department" EntitySet="Departments" />
+            <End Role="Employee" EntitySet="Employees" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Products_Department" Association="StoreFrontModel.FK_Products_Department">
+            <End Role="Department" EntitySet="Departments" />
+            <End Role="Product" EntitySet="Products" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Employee_Employee" Association="StoreFrontModel.FK_Employee_Employee">
+            <End Role="Employee" EntitySet="Employees" />
+            <End Role="Employee1" EntitySet="Employees" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Products_ProductType1" Association="StoreFrontModel.FK_Products_ProductType1">
+            <End Role="ProductType" EntitySet="ProductTypes" />
+            <End Role="Product" EntitySet="Products" />
+          </AssociationSet>
+        </EntityContainer>
         <EntityType Name="Craftsman">
           <Key>
             <PropertyRef Name="CraftsmanID" />
           </Key>
-          <Property Name="CraftsmanName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CraftsmanName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Secialization" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="CraftsmanID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <NavigationProperty Name="Products" Relationship="Self.FK_Products_Craftsman" FromRole="Craftsman" ToRole="Products" />
+          <NavigationProperty Name="Products" Relationship="StoreFrontModel.FK_Products_Craftsman" FromRole="Craftsman" ToRole="Product" />
         </EntityType>
         <EntityType Name="Department">
           <Key>
             <PropertyRef Name="DepartmentID" />
           </Key>
           <Property Name="DepartmentID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="DepartmentName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="Products" Relationship="Self.FK_Products_Department" FromRole="Department" ToRole="Products" />
+          <Property Name="DepartmentName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Employees" Relationship="StoreFrontModel.FK_Employee_Department" FromRole="Department" ToRole="Employee" />
+          <NavigationProperty Name="Products" Relationship="StoreFrontModel.FK_Products_Department" FromRole="Department" ToRole="Product" />
         </EntityType>
         <EntityType Name="Employee">
           <Key>
             <PropertyRef Name="EmployeeID" />
           </Key>
           <Property Name="EmployeeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="EmployeeName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="EmployeeName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="DirectReportID" Type="Int32" />
-          <NavigationProperty Name="Products" Relationship="Self.FK_Products_Employee" FromRole="Employee" ToRole="Products" />
+          <Property Name="DepartmentID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Department" Relationship="StoreFrontModel.FK_Employee_Department" FromRole="Employee" ToRole="Department" />
+          <NavigationProperty Name="Employee1" Relationship="StoreFrontModel.FK_Employee_Employee" FromRole="Employee" ToRole="Employee1" />
+          <NavigationProperty Name="Employee2" Relationship="StoreFrontModel.FK_Employee_Employee" FromRole="Employee1" ToRole="Employee" />
         </EntityType>
         <EntityType Name="ProductType">
           <Key>
             <PropertyRef Name="ProductTypeID" />
           </Key>
           <Property Name="ProductTypeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ProductTypeName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="Products" Relationship="Self.FK_Products_ProductType1" FromRole="ProductType" ToRole="Products" />
-        </EntityType>
-        <EntityType Name="Request">
-          <Key>
-            <PropertyRef Name="RequestID" />
-          </Key>
-          <Property Name="RequestID" Type="Int32" Nullable="false" />
-          <Property Name="RequestDescription" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="RequestReward" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="DatePutUp" Type="DateTime" Precision="0" />
-          <Property Name="RequestPosterName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-        </EntityType>
-        <EntityType Name="sysdiagram">
-          <Key>
-            <PropertyRef Name="diagram_id" />
-          </Key>
-          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="principal_id" Type="Int32" Nullable="false" />
-          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="version" Type="Int32" />
-          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="ProductTypeName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Products" Relationship="StoreFrontModel.FK_Products_ProductType1" FromRole="ProductType" ToRole="Product" />
         </EntityType>
         <EntityType Name="Product">
           <Key>
@@ -235,101 +237,85 @@ warning 6002: The table/view 'StoreFront.dbo.Products' does not have a primary k
             <PropertyRef Name="ProductTypeID" />
             <PropertyRef Name="Price" />
             <PropertyRef Name="UnitsSold" />
-            <PropertyRef Name="Discontinued" />
             <PropertyRef Name="DepartmentID" />
             <PropertyRef Name="CraftsmanID" />
           </Key>
           <Property Name="ProductID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ProductName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ProductName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="ProductTypeID" Type="Int32" Nullable="false" />
-          <Property Name="Price" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="Price" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
           <Property Name="UnitsSold" Type="Int32" Nullable="false" />
           <Property Name="InStock" Type="Boolean" />
-          <Property Name="Discontinued" Type="Boolean" Nullable="false" />
+          <Property Name="Discontinued" Type="Boolean" />
           <Property Name="DepartmentID" Type="Int32" Nullable="false" />
-          <Property Name="EmployeeID" Type="Int32" />
           <Property Name="DateOnShelf" Type="DateTime" Precision="0" />
           <Property Name="CraftsmanID" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Craftsman" Relationship="Self.FK_Products_Craftsman" FromRole="Products" ToRole="Craftsman" />
-          <NavigationProperty Name="Department" Relationship="Self.FK_Products_Department" FromRole="Products" ToRole="Department" />
-          <NavigationProperty Name="Employee" Relationship="Self.FK_Products_Employee" FromRole="Products" ToRole="Employee" />
-          <NavigationProperty Name="ProductType" Relationship="Self.FK_Products_ProductType1" FromRole="Products" ToRole="ProductType" />
+          <NavigationProperty Name="Craftsman" Relationship="StoreFrontModel.FK_Products_Craftsman" FromRole="Product" ToRole="Craftsman" />
+          <NavigationProperty Name="Department" Relationship="StoreFrontModel.FK_Products_Department" FromRole="Product" ToRole="Department" />
+          <NavigationProperty Name="ProductType" Relationship="StoreFrontModel.FK_Products_ProductType1" FromRole="Product" ToRole="ProductType" />
         </EntityType>
         <Association Name="FK_Products_Craftsman">
-          <End Role="Craftsman" Type="Self.Craftsman" Multiplicity="1" />
-          <End Role="Products" Type="Self.Product" Multiplicity="*" />
+          <End Type="StoreFrontModel.Craftsman" Role="Craftsman" Multiplicity="1" />
+          <End Type="StoreFrontModel.Product" Role="Product" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Craftsman">
               <PropertyRef Name="CraftsmanID" />
             </Principal>
-            <Dependent Role="Products">
+            <Dependent Role="Product">
               <PropertyRef Name="CraftsmanID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Products_Department">
-          <End Role="Department" Type="Self.Department" Multiplicity="1" />
-          <End Role="Products" Type="Self.Product" Multiplicity="*" />
+        <Association Name="FK_Employee_Department">
+          <End Type="StoreFrontModel.Department" Role="Department" Multiplicity="1" />
+          <End Type="StoreFrontModel.Employee" Role="Employee" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Department">
               <PropertyRef Name="DepartmentID" />
             </Principal>
-            <Dependent Role="Products">
+            <Dependent Role="Employee">
               <PropertyRef Name="DepartmentID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Products_Employee">
-          <End Role="Employee" Type="Self.Employee" Multiplicity="0..1" />
-          <End Role="Products" Type="Self.Product" Multiplicity="*" />
+        <Association Name="FK_Products_Department">
+          <End Type="StoreFrontModel.Department" Role="Department" Multiplicity="1" />
+          <End Type="StoreFrontModel.Product" Role="Product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Department">
+              <PropertyRef Name="DepartmentID" />
+            </Principal>
+            <Dependent Role="Product">
+              <PropertyRef Name="DepartmentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Employee_Employee">
+          <End Type="StoreFrontModel.Employee" Role="Employee" Multiplicity="0..1" />
+          <End Type="StoreFrontModel.Employee" Role="Employee1" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Employee">
               <PropertyRef Name="EmployeeID" />
             </Principal>
-            <Dependent Role="Products">
-              <PropertyRef Name="EmployeeID" />
+            <Dependent Role="Employee1">
+              <PropertyRef Name="DirectReportID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Products_ProductType1">
-          <End Role="ProductType" Type="Self.ProductType" Multiplicity="1" />
-          <End Role="Products" Type="Self.Product" Multiplicity="*" />
+          <End Type="StoreFrontModel.ProductType" Role="ProductType" Multiplicity="1" />
+          <End Type="StoreFrontModel.Product" Role="Product" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="ProductType">
               <PropertyRef Name="ProductTypeID" />
             </Principal>
-            <Dependent Role="Products">
+            <Dependent Role="Product">
               <PropertyRef Name="ProductTypeID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="StoreFrontEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Craftsmen" EntityType="Self.Craftsman" />
-          <EntitySet Name="Departments" EntityType="Self.Department" />
-          <EntitySet Name="Employees" EntityType="Self.Employee" />
-          <EntitySet Name="ProductTypes" EntityType="Self.ProductType" />
-          <EntitySet Name="Requests" EntityType="Self.Request" />
-          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
-          <EntitySet Name="Products" EntityType="Self.Product" />
-          <AssociationSet Name="FK_Products_Craftsman" Association="Self.FK_Products_Craftsman">
-            <End Role="Craftsman" EntitySet="Craftsmen" />
-            <End Role="Products" EntitySet="Products" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Products_Department" Association="Self.FK_Products_Department">
-            <End Role="Department" EntitySet="Departments" />
-            <End Role="Products" EntitySet="Products" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Products_Employee" Association="Self.FK_Products_Employee">
-            <End Role="Employee" EntitySet="Employees" />
-            <End Role="Products" EntitySet="Products" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Products_ProductType1" Association="Self.FK_Products_ProductType1">
-            <End Role="ProductType" EntitySet="ProductTypes" />
-            <End Role="Products" EntitySet="Products" />
-          </AssociationSet>
-        </EntityContainer>
-      </Schema>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -338,74 +324,52 @@ warning 6002: The table/view 'StoreFront.dbo.Products' does not have a primary k
           <EntitySetMapping Name="Craftsmen">
             <EntityTypeMapping TypeName="StoreFrontModel.Craftsman">
               <MappingFragment StoreEntitySet="Craftsman">
-                <ScalarProperty Name="CraftsmanName" ColumnName="CraftsmanName" />
-                <ScalarProperty Name="Secialization" ColumnName="Secialization" />
                 <ScalarProperty Name="CraftsmanID" ColumnName="CraftsmanID" />
+                <ScalarProperty Name="Secialization" ColumnName="Secialization" />
+                <ScalarProperty Name="CraftsmanName" ColumnName="CraftsmanName" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Departments">
             <EntityTypeMapping TypeName="StoreFrontModel.Department">
               <MappingFragment StoreEntitySet="Department">
-                <ScalarProperty Name="DepartmentID" ColumnName="DepartmentID" />
                 <ScalarProperty Name="DepartmentName" ColumnName="DepartmentName" />
+                <ScalarProperty Name="DepartmentID" ColumnName="DepartmentID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Employees">
             <EntityTypeMapping TypeName="StoreFrontModel.Employee">
               <MappingFragment StoreEntitySet="Employee">
-                <ScalarProperty Name="EmployeeID" ColumnName="EmployeeID" />
-                <ScalarProperty Name="EmployeeName" ColumnName="EmployeeName" />
+                <ScalarProperty Name="DepartmentID" ColumnName="DepartmentID" />
                 <ScalarProperty Name="DirectReportID" ColumnName="DirectReportID" />
+                <ScalarProperty Name="EmployeeName" ColumnName="EmployeeName" />
+                <ScalarProperty Name="EmployeeID" ColumnName="EmployeeID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="ProductTypes">
             <EntityTypeMapping TypeName="StoreFrontModel.ProductType">
               <MappingFragment StoreEntitySet="ProductType">
-                <ScalarProperty Name="ProductTypeID" ColumnName="ProductTypeID" />
                 <ScalarProperty Name="ProductTypeName" ColumnName="ProductTypeName" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Requests">
-            <EntityTypeMapping TypeName="StoreFrontModel.Request">
-              <MappingFragment StoreEntitySet="Requests">
-                <ScalarProperty Name="RequestID" ColumnName="RequestID" />
-                <ScalarProperty Name="RequestDescription" ColumnName="RequestDescription" />
-                <ScalarProperty Name="RequestReward" ColumnName="RequestReward" />
-                <ScalarProperty Name="DatePutUp" ColumnName="DatePutUp" />
-                <ScalarProperty Name="RequestPosterName" ColumnName="RequestPosterName" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="sysdiagrams">
-            <EntityTypeMapping TypeName="StoreFrontModel.sysdiagram">
-              <MappingFragment StoreEntitySet="sysdiagrams">
-                <ScalarProperty Name="name" ColumnName="name" />
-                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
-                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
-                <ScalarProperty Name="version" ColumnName="version" />
-                <ScalarProperty Name="definition" ColumnName="definition" />
+                <ScalarProperty Name="ProductTypeID" ColumnName="ProductTypeID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Products">
             <EntityTypeMapping TypeName="StoreFrontModel.Product">
               <MappingFragment StoreEntitySet="Products">
-                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
-                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="ProductTypeID" ColumnName="ProductTypeID" />
-                <ScalarProperty Name="Price" ColumnName="Price" />
-                <ScalarProperty Name="UnitsSold" ColumnName="UnitsSold" />
-                <ScalarProperty Name="InStock" ColumnName="InStock" />
-                <ScalarProperty Name="Discontinued" ColumnName="Discontinued" />
-                <ScalarProperty Name="DepartmentID" ColumnName="DepartmentID" />
-                <ScalarProperty Name="EmployeeID" ColumnName="EmployeeID" />
-                <ScalarProperty Name="DateOnShelf" ColumnName="DateOnShelf" />
                 <ScalarProperty Name="CraftsmanID" ColumnName="CraftsmanID" />
+                <ScalarProperty Name="DateOnShelf" ColumnName="DateOnShelf" />
+                <ScalarProperty Name="DepartmentID" ColumnName="DepartmentID" />
+                <ScalarProperty Name="Discontinued" ColumnName="Discontinued" />
+                <ScalarProperty Name="InStock" ColumnName="InStock" />
+                <ScalarProperty Name="UnitsSold" ColumnName="UnitsSold" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="ProductTypeID" ColumnName="ProductTypeID" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

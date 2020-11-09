@@ -18,6 +18,8 @@ namespace Dungeon
             UserUI setup = new UserUI();
             Player player = new Player();
             setup.Setup();
+            Shop shop = new Shop();
+            string[] playerShopActions = { "Browse", "Sell", "Leave" };
             string[] playerActions = { "Attack", "Inventory", "Run Away", "Player Info", "Monster Info", "Exit" };
             string[] pRace = Enum.GetNames(typeof(Race));
             string[] playerInvActions = { "Weapons", "Armor", "Items", "Exit" };
@@ -26,60 +28,67 @@ namespace Dungeon
             //UserUI.GenerateBattleScreen(setup.Boxes); //Used to test any modifications made to the sizes of the boxes
             Console.ReadLine();
             player = Menus.CharacterCreationMenu(pRace,setup.Boxes[4], player, longSword);
-            player.AddWeapon(longSword, 1);
+            player.AddWeapon(longSword);
             Console.Clear();
             Console.ReadLine();
-            int score = 0, con = 0;
-            bool characterCreation = false, item = true;
+            int score = 0;
             Inventory Inv = new Inventory();
             //Testing Objects
             Item recover = new Item("Potion", "Heals for 20 health", "HEAL", 20, 1);
             Item recoverTest = new Item("Potion", "Heals for 20 health", "HEAL", 20, 0);
             Item bomb = new Item("Bomb", "Deals 40 points of dmg", "DMG", 40, 2);
-            player.AddItem(recover, 1);
-            player.AddItem(recoverTest, 1);
-            player.AddItem(bomb, 1);
+            player.AddItem(recover);
+            player.AddItem(recoverTest);
+            player.AddItem(bomb);
             Equipment Helmet = new Equipment("Helmet", "A helmet forged in some far off place");
             Equipment ChestPlate = new Equipment("ChestPlate", "A ChestPlate forged in some far off place");
             Equipment ChestPlate1 = new Equipment("ChestPlate1", "A ChestPlate forged in some far off place");
-            player.AddEquipment(Helmet, 1);
-            player.AddEquipment(ChestPlate, 1);
-            player.AddEquipment(ChestPlate1, 1);
-            
+            player.AddEquipment(Helmet);
+            player.AddEquipment(ChestPlate);
+            player.AddEquipment(ChestPlate1);
+
             //Actual battle area
+            int monstersToDefeat = 5;
             bool exit = false;
             do
             {
                 // TODO create a room
                 UserUI.GenerateBattleScreen(setup.Boxes);
                 //3. TODO Create monster
-                Rabbit r1 = new Rabbit("White Rabbit", 25, 25, 50, 20, 2, 10, 15, 10, "Thats no ordinary rabbit! Look at the bones...", true);
+                Rabbit r1 = new Rabbit("White Rabbit", 25, 25, 50, 20, 2, 10, 15, 10, 1000, "Thats no ordinary rabbit! Look at the bones...", true);
                 //Console.WriteLine(r1);
                 Rabbit r2 = new Rabbit();
                 Monster[] monsters = { r1, r1, r2, r2, r2 };
                 Random rand = new Random();
-                //Console.WriteLine("In this room " + monster.Name);
-                bool reload = false;
-                do
-                {
-                    UserUI.TextFormatter(setup.Boxes[2], GetRoom(), 21, 1, false);
-                    int randNbr = rand.Next(monsters.Length);
-                    Monster monster = monsters[randNbr];
-                    Menus.FightMenu(player, monster, playerActions,playerInvActions,setup);
-                    Console.ReadLine();
-                    
-                    
-                    if (player.Life <= 0)
-                    {
-                        Console.Clear();
-                        Console.WriteLine("Game over.\a");
-                        Console.WriteLine("Your score: " + score);
-                        Console.WriteLine("Thank you for playing my game!");
-                        exit = true;
-                        
-                    }
-                } while (!exit && !reload);
+                //Console.WriteLine("In this room " + monsters.Name);
+                //do
+                //{
+                //    UserUI.TextFormatter(setup.Boxes[2], GetRoom(), 21, 1, false);
+                //    int randNbr = rand.Next(monsters.Length);
+                //    Monster monster = monsters[randNbr];
+                //    Menus.FightMenu(player, monster, playerActions,playerInvActions,setup);
+                //    Console.ReadLine();
 
+
+                //    if (player.Life <= 0)
+                //    {
+                //        Console.Clear();
+                //        Console.WriteLine("Game over.\a");
+                //        Console.WriteLine("Your score: " + score);
+                //        Console.WriteLine("Thank you for playing my game!");
+                //        exit = true;
+
+                //    }
+
+                //} while (!exit && monstersToDefeat >= score);
+
+                monstersToDefeat += score;
+                Console.Clear();
+                Console.WriteLine("You stumble upon a shop in this seemingly endless dungeon : ENTER to continue");
+                player.Gold = 1000;
+                UserUI.GenerateShopScreen(setup.Boxes);
+                Console.ReadLine();
+                Menus.Shop(player, playerShopActions, playerInvActions, setup, score, shop);
 
             } while (!exit);
             

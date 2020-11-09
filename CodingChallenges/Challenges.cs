@@ -24,16 +24,32 @@ namespace CodingChallenges
             //    }
             //    Console.WriteLine(runningTotal);
             //#endregion
-            #region FibonacciEvenSum
+            //#region FibonacciEvenSum
             int fib1 = 1, fib2 = 2, limit = 10;
+            ////Change "limit" to change the limit
+            //for (int i = 0; i < limit; i++)
+            //{
+            //    Console.Write(fib1 + ", ");
+            //    Console.Write(fib2 + ", ");
+            //    fib1 += fib2;
+            //    fib2 += fib1;
+            //}
+            //#endregion
+            #region TenDigitFibonacci
             //Change "limit" to change the limit
-            for (int i = 0; i < limit; i++)
+            fib1 = 1;
+            fib2 = 2;
+            int index = 0;
+            do
             {
-                Console.Write(fib1 + ", ");
-                Console.Write(fib2 + ", ");
+                //Console.Write(fib1 + ", ");
+                //Console.Write(fib2 + ", ");
                 fib1 += fib2;
                 fib2 += fib1;
-            }
+                index += 2;
+            } while (fib1.ToString().Length <= 10 || fib2.ToString().Length <= 10);
+            
+            Console.WriteLine(fib1 + ", " + fib2);
             #endregion
         }
     }

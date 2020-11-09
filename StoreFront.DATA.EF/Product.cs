@@ -19,17 +19,12 @@ namespace StoreFront.DATA.EF
         public string Description { get; set; }
         public int ProductTypeID { get; set; }
         public decimal Price { get; set; }
-        public int UnitsSold { get; set; }
+        public Nullable<int> UnitsSold { get; set; }
         public Nullable<bool> InStock { get; set; }
-        public bool Discontinued { get; set; }
+        public Nullable<bool> Discontinued { get; set; }
         public int DepartmentID { get; set; }
-        public Nullable<int> EmployeeID { get; set; }
         public Nullable<System.DateTime> DateOnShelf { get; set; }
         public int CraftsmanID { get; set; }
     
-        public virtual Craftsman Craftsman { get; set; }
-        public virtual Department Department { get; set; }
-        public virtual Employee Employee { get; set; }
-        public virtual ProductType ProductType { get; set; }
     }
 }
