@@ -187,6 +187,7 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Utilities\ImageService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\css\animate.css" />
@@ -200,10 +201,16 @@
     <Content Include="Content\css\style.css" />
     <Content Include="Content\fonts\bootstrap\glyphicons-halflings-regular.svg" />
     <Content Include="Content\fonts\icomoon\icomoon.svg" />
+    <Content Include="Content\images\david-lariviere-OUtwHs3tHx8-unsplash.jpg" />
+    <Content Include="Content\images\dawin-rizzo-kiq2TSTeH0o-unsplash.jpg" />
+    <Content Include="Content\images\eric-tompkins-B22JxzOkjYs-unsplash.jpg" />
+    <Content Include="Content\images\fabian-wohlgemuth-ERVigmutjAs-unsplash.jpg" />
+    <Content Include="Content\images\fernand-de-canne-kiO8Vk-DgpQ-unsplash.jpg" />
     <Content Include="Content\images\img_bg_1.jpg" />
     <Content Include="Content\images\img_bg_2.jpg" />
     <Content Include="Content\images\img_bg_3.jpg" />
     <Content Include="Content\images\img_bg_4.jpg" />
+    <Content Include="Content\images\levi-saunders-m_PB-FYlR_Q-unsplash.jpg" />
     <Content Include="Content\images\loader.gif" />
     <Content Include="Content\images\loc.png" />
     <Content Include="Content\images\person1.jpg" />
@@ -222,6 +229,7 @@
     <Content Include="Content\images\staff-1.jpg" />
     <Content Include="Content\images\staff-2.jpg" />
     <Content Include="Content\images\staff-3.jpg" />
+    <Content Include="Content\images\StudentPhotos\DefaultImage.jpg" />
     <Content Include="Content\images\work_1.png" />
     <Content Include="Content\js\bootstrap.min.js" />
     <Content Include="Content\js\google_map.js" />

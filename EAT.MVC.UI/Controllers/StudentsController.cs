@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Drawing;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using EAT.MVC.DATA.EF;
+using EAT.MVC.UI.Models;
+using EAT.MVC.UI.Utilities;
 
 namespace EAT.MVC.UI.Controllers
 {
@@ -52,12 +55,38 @@ namespace EAT.MVC.UI.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public ActionResult Create([Bind(Include = "StudentId,FirstName,LastName,Major,Address,City,State,ZipCode,Phone,Email,PhotoUrl,SSID")] Student student)
+        public ActionResult Create([Bind(Include = "StudentId,FirstName,LastName,Major,Address,City,State,ZipCode,Phone,Email,PhotoUrl,SSID")] Student student,HttpPostedFileBase studentImage)
         {
             if (ModelState.IsValid)
             {
                 db.Students.Add(student);
+                #region Image upload
+                string file = "DefaultImage.jpg";
+                if (studentImage != null)
+
+                    file = studentImage.FileName;
+                string ext = file.Substring(file.LastIndexOf('.'));
+                string[] goodExts = { ".jpeg", ".jpg", ".png", ".gif" };
+                if (goodExts.Contains(ext))
+                {
+                    if (studentImage.ContentLength <= 4194304)
+                    {
+                        file = Guid.NewGuid() + ext;
+
+                        string savePath = Server.MapPath("~/Content/images/StudentPhotos/");
+                        Image convertedImage = Image.FromStream(studentImage.InputStream);
+                        int maxImageSize = 500;
+                        int maxThumbSize = 100;
+                        ImageService.ResizeImage(savePath, file, convertedImage, maxImageSize, maxThumbSize);
+                    }
+
+
+                }
+                student.PhotoUrl = file;
+                #endregion
+                db.Students.Add(student);
                 db.SaveChanges();
+               
                 return RedirectToAction("Index");
             }
 
@@ -88,10 +117,34 @@ namespace EAT.MVC.UI.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public ActionResult Edit([Bind(Include = "StudentId,FirstName,LastName,Major,Address,City,State,ZipCode,Phone,Email,PhotoUrl,SSID")] Student student)
+        public ActionResult Edit([Bind(Include = "StudentId,FirstName,LastName,Major,Address,City,State,ZipCode,Phone,Email,PhotoUrl,SSID")] Student student, HttpPostedFileBase studentImage)
         {
             if (ModelState.IsValid)
             {
+                #region Image upload
+                string file = "DefaultImage.jpg";
+                if (studentImage != null)
+                
+                    file = studentImage.FileName;
+                    string ext = file.Substring(file.LastIndexOf('.'));
+                    string[] goodExts = { ".jpeg", ".jpg", ".png", ".gif" };
+                    if (goodExts.Contains(ext))
+                    {
+                        if (studentImage.ContentLength <= 4194304)
+                        {
+                        file = Guid.NewGuid() + ext;
+
+                        string savePath = Server.MapPath("~/Content/images/StudentPhotos/");
+                        Image convertedImage = Image.FromStream(studentImage.InputStream);
+                        int maxImageSize = 500;
+                        int maxThumbSize = 100;
+                        ImageService.ResizeImage(savePath, file, convertedImage, maxImageSize, maxThumbSize);
+                        }
+
+
+                    }
+                student.PhotoUrl = file;
+                #endregion
                 db.Entry(student).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");

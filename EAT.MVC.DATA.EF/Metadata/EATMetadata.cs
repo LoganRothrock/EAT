@@ -87,7 +87,7 @@ namespace EAT.MVC.DATA.EF
 
     }
 
-    public class CourseMetadata
+    public class CoursMetadata
     {
         [Required(ErrorMessage = "* Course Name is Required")]
         [Display(Name = "Course Name")]
@@ -115,8 +115,8 @@ namespace EAT.MVC.DATA.EF
         public bool IsActive { get; set; }
     }
 
-    [MetadataType(typeof(CourseMetadata))]
-    public partial class Course
+    [MetadataType(typeof(CoursMetadata))]
+    public partial class Cours
     {
 
     }
@@ -168,7 +168,7 @@ namespace EAT.MVC.DATA.EF
     [MetadataType(typeof(ScheduledClassMetadata))]
     public partial class ScheduledClass
     {
-
+        public string ClassInfo { get { return $"{StartDate} {Cours.CourseName} {Location}"; } }
     }
 
     public class EnrollmentMetadata
