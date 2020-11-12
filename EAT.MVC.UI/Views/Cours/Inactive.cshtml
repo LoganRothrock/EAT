@@ -1,16 +1,16 @@
 ﻿@model IEnumerable<EAT.MVC.DATA.EF.Cours>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Inactive";
 }
 
-<h2>Index</h2>
+<h2>Inactive</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
 <p>
-    @Html.ActionLink("View Inactive", "Inactive", "Cours",null,new { @class = "btn btn-primary"})
+    @Html.ActionLink("View Active", "Index", "Cours", null, new { @class = "btn btn-primary" })
 </p>
 <table class="table">
     <tr>
@@ -56,10 +56,9 @@
             @Html.DisplayFor(modelItem => item.IsActive)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.CourseId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.CourseId }) |
-
-            @Html.ActionLink("Deactivate", "Delete", new { id=item.CourseId })
+            @Html.ActionLink("Edit", "Edit", new { id = item.CourseId }) |
+            @Html.ActionLink("Details", "Details", new { id = item.CourseId }) |
+            @Html.ActionLink("Activate", "Delete", new { id = item.CourseId })
         </td>
     </tr>
 }

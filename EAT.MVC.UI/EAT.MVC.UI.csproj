@@ -201,18 +201,23 @@
     <Content Include="Content\css\style.css" />
     <Content Include="Content\fonts\bootstrap\glyphicons-halflings-regular.svg" />
     <Content Include="Content\fonts\icomoon\icomoon.svg" />
+    <Content Include="Content\images\balloonTying.png" />
     <Content Include="Content\images\david-lariviere-OUtwHs3tHx8-unsplash.jpg" />
     <Content Include="Content\images\dawin-rizzo-kiq2TSTeH0o-unsplash.jpg" />
     <Content Include="Content\images\eric-tompkins-B22JxzOkjYs-unsplash.jpg" />
     <Content Include="Content\images\fabian-wohlgemuth-ERVigmutjAs-unsplash.jpg" />
+    <Content Include="Content\images\facepainting.png" />
     <Content Include="Content\images\fernand-de-canne-kiO8Vk-DgpQ-unsplash.jpg" />
+    <Content Include="Content\images\hackerClown.jpg" />
     <Content Include="Content\images\img_bg_1.jpg" />
     <Content Include="Content\images\img_bg_2.jpg" />
     <Content Include="Content\images\img_bg_3.jpg" />
     <Content Include="Content\images\img_bg_4.jpg" />
     <Content Include="Content\images\levi-saunders-m_PB-FYlR_Q-unsplash.jpg" />
+    <Content Include="Content\images\lionTaming.jpg" />
     <Content Include="Content\images\loader.gif" />
     <Content Include="Content\images\loc.png" />
+    <Content Include="Content\images\nunchuck.png" />
     <Content Include="Content\images\person1.jpg" />
     <Content Include="Content\images\person2.jpg" />
     <Content Include="Content\images\person3.jpg" />
@@ -230,6 +235,7 @@
     <Content Include="Content\images\staff-2.jpg" />
     <Content Include="Content\images\staff-3.jpg" />
     <Content Include="Content\images\StudentPhotos\DefaultImage.jpg" />
+    <Content Include="Content\images\trapez.jpg" />
     <Content Include="Content\images\work_1.png" />
     <Content Include="Content\js\bootstrap.min.js" />
     <Content Include="Content\js\google_map.js" />
@@ -578,6 +584,9 @@
     <Content Include="Views\StudentStatus\Details.cshtml" />
     <Content Include="Views\StudentStatus\Edit.cshtml" />
     <Content Include="Views\StudentStatus\Index.cshtml" />
+    <Content Include="Views\Cours\Inactive.cshtml" />
+    <Content Include="Views\Students\Inactive.cshtml" />
+    <Content Include="Views\ScheduledClasses\Inactive.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

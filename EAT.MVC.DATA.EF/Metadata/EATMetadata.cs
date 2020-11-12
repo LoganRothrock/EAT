@@ -168,6 +168,7 @@ namespace EAT.MVC.DATA.EF
     [MetadataType(typeof(ScheduledClassMetadata))]
     public partial class ScheduledClass
     {
+        [Display(Name = "Class information")]
         public string ClassInfo { get { return $"{StartDate} {Cours.CourseName} {Location}"; } }
     }
 

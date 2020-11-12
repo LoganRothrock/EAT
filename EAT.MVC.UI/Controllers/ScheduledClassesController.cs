@@ -18,8 +18,14 @@ namespace EAT.MVC.UI.Controllers
         [Authorize(Roles = "Admin, Scheduling")]
         public ActionResult Index()
         {
-            var scheduledClasses = db.ScheduledClasses.Include(s => s.Cours).Include(s => s.ScheduledClassStatus);
+            var scheduledClasses = db.ScheduledClasses.Include(s => s.Cours).Include(s => s.ScheduledClassStatus).Where(c => c.SCSID !=4);
             return View(scheduledClasses.ToList());
+        }
+
+        [Authorize(Roles = "Admin, Scheduling")]
+        public ActionResult Inactive()
+        {
+            return View(db.ScheduledClasses.Where(c => c.SCSID == 4));
         }
 
         // GET: ScheduledClasses/Details/5
@@ -127,7 +133,15 @@ namespace EAT.MVC.UI.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             ScheduledClass scheduledClass = db.ScheduledClasses.Find(id);
-            db.ScheduledClasses.Remove(scheduledClass);
+            if (scheduledClass.SCSID != 4)
+            {
+                scheduledClass.SCSID = 4;
+            }
+            else if (scheduledClass.SCSID == 4)
+            {
+                scheduledClass.SCSID = 1;
+            }
+            //db.ScheduledClasses.Remove(scheduledClass);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

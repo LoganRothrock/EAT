@@ -18,7 +18,13 @@ namespace EAT.MVC.UI.Controllers
         [Authorize(Roles = "Admin")]
         public ActionResult Index()
         {
-            return View(db.Courses.ToList());
+            return View(db.Courses.Where(c => c.IsActive).ToList());
+        }
+
+        [Authorize(Roles = "Admin")]
+        public ActionResult Inactive()
+        {
+            return View(db.Courses.Where(c => !c.IsActive).ToList());
         }
 
         // GET: Cours/Details/5
@@ -118,7 +124,8 @@ namespace EAT.MVC.UI.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Cours cours = db.Courses.Find(id);
-            db.Courses.Remove(cours);
+            cours.IsActive = !cours.IsActive;
+            //db.Courses.Remove(cours);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

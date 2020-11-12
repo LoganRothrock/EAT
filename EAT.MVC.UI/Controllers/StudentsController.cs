@@ -21,10 +21,15 @@ namespace EAT.MVC.UI.Controllers
         [Authorize(Roles = "Admin, Scheduling")]
         public ActionResult Index()
         {
-            var students = db.Students.Include(s => s.StudentStatus);
+            var students = db.Students.Where(s => s.SSID != 3);
             return View(students.ToList());
         }
 
+        [Authorize(Roles = "Admin, Scheduling")]
+        public ActionResult Inactive()
+        {
+            return View(db.Students.Where(s => s.SSID == 3));
+        }
         // GET: Students/Details/5
         [Authorize(Roles = "Admin, Scheduling")]
         public ActionResult Details(int? id)
@@ -63,26 +68,29 @@ namespace EAT.MVC.UI.Controllers
                 #region Image upload
                 string file = "DefaultImage.jpg";
                 if (studentImage != null)
-
-                    file = studentImage.FileName;
-                string ext = file.Substring(file.LastIndexOf('.'));
-                string[] goodExts = { ".jpeg", ".jpg", ".png", ".gif" };
-                if (goodExts.Contains(ext))
                 {
-                    if (studentImage.ContentLength <= 4194304)
+                    file = studentImage.FileName;
+
+
+                    string ext = file.Substring(file.LastIndexOf('.'));
+                    string[] goodExts = { ".jpeg", ".jpg", ".png", ".gif" };
+                    if (goodExts.Contains(ext))
                     {
-                        file = Guid.NewGuid() + ext;
+                        if (studentImage.ContentLength <= 4194304)
+                        {
+                            file = Guid.NewGuid() + ext;
 
-                        string savePath = Server.MapPath("~/Content/images/StudentPhotos/");
-                        Image convertedImage = Image.FromStream(studentImage.InputStream);
-                        int maxImageSize = 500;
-                        int maxThumbSize = 100;
-                        ImageService.ResizeImage(savePath, file, convertedImage, maxImageSize, maxThumbSize);
+                            string savePath = Server.MapPath("~/Content/images/StudentPhotos/");
+                            Image convertedImage = Image.FromStream(studentImage.InputStream);
+                            int maxImageSize = 500;
+                            int maxThumbSize = 100;
+                            ImageService.ResizeImage(savePath, file, convertedImage, maxImageSize, maxThumbSize);
+                        }
+
+
                     }
-
-
+                    student.PhotoUrl = file;
                 }
-                student.PhotoUrl = file;
                 #endregion
                 db.Students.Add(student);
                 db.SaveChanges();
@@ -176,7 +184,15 @@ namespace EAT.MVC.UI.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Student student = db.Students.Find(id);
-            db.Students.Remove(student);
+            //db.Students.Remove(student);
+            if (student.SSID != 2)
+            {
+                student.SSID = 3;
+            }
+            else if (student.SSID == 3)
+            {
+                student.SSID = 2;
+            }
             db.SaveChanges();
             return RedirectToAction("Index");
         }

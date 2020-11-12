@@ -1,16 +1,17 @@
 ﻿@model IEnumerable<EAT.MVC.DATA.EF.ScheduledClass>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Inactive";
 }
 
-<h2>Index</h2>
+<h2>Inactive</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
+
 <p>
-    @Html.ActionLink("View Cancelled Classes", "Inactive", "ScheduledClasses", null, new { @class = "btn btn-primary" })
+    @Html.ActionLink("View Active Courses", "Index", "ScheduledClasses", null, new { @class = "btn btn-primary" })
 </p>
 <table class="table">
     <tr>
@@ -58,11 +59,13 @@
             </td>
             <td>
                 @Html.ActionLink("Edit", "Edit", new { id = item.ScheduledClassId }) |
-                @Html.ActionLink("Details", "Details", new { id = item.ScheduledClassId }) |
+                @Html.ActionLink("Details", "Details", new { id = item.ScheduledClassId })
                 @if (User.IsInRole("Admin"))
                 {
-                    @Html.ActionLink("Cancel Class", "Delete", new { id = item.ScheduledClassId })
+                    <span> | </span>
+                    @Html.ActionLink("Reactivate Class", "Delete", new { id = item.ScheduledClassId })
                 }
+
             </td>
         </tr>
     }
