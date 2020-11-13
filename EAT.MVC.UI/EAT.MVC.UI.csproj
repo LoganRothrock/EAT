@@ -411,6 +411,7 @@
     <Content Include="Content\sass\bootstrap\mixins\_vendor-prefixes.scss" />
     <Content Include="Content\sass\bootstrap.scss" />
     <Content Include="Content\sass\style.scss" />
+    <Content Include="Content\Documentation\Document.pdf" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
