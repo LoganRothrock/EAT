@@ -239,6 +239,7 @@
     <Content Include="Content\images\staff-1.jpg" />
     <Content Include="Content\images\staff-2.jpg" />
     <Content Include="Content\images\staff-3.jpg" />
+    <Content Include="Content\images\StudentPhotos\t_DefaultImage.jpg" />
     <Content Include="Content\images\StudentPhotos\DefaultImage.jpg" />
     <Content Include="Content\images\trapez.jpg" />
     <Content Include="Content\images\work_1.png" />
