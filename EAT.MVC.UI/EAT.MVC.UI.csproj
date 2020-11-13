@@ -202,14 +202,18 @@
     <Content Include="Content\css\style.css" />
     <Content Include="Content\fonts\bootstrap\glyphicons-halflings-regular.svg" />
     <Content Include="Content\fonts\icomoon\icomoon.svg" />
+    <Content Include="Content\images\108.jpg" />
     <Content Include="Content\images\balloonTying.png" />
+    <Content Include="Content\images\balloonTying10.8.png" />
     <Content Include="Content\images\david-lariviere-OUtwHs3tHx8-unsplash.jpg" />
     <Content Include="Content\images\dawin-rizzo-kiq2TSTeH0o-unsplash.jpg" />
     <Content Include="Content\images\eric-tompkins-B22JxzOkjYs-unsplash.jpg" />
     <Content Include="Content\images\fabian-wohlgemuth-ERVigmutjAs-unsplash.jpg" />
     <Content Include="Content\images\facepainting.png" />
+    <Content Include="Content\images\facepainting10.8.png" />
     <Content Include="Content\images\fernand-de-canne-kiO8Vk-DgpQ-unsplash.jpg" />
     <Content Include="Content\images\hackerClown.jpg" />
+    <Content Include="Content\images\hackerClownsquare.jpg" />
     <Content Include="Content\images\img_bg_1.jpg" />
     <Content Include="Content\images\img_bg_2.jpg" />
     <Content Include="Content\images\img_bg_3.jpg" />
@@ -235,6 +239,7 @@
     <Content Include="Content\images\staff-1.jpg" />
     <Content Include="Content\images\staff-2.jpg" />
     <Content Include="Content\images\staff-3.jpg" />
+    <Content Include="Content\images\StudentPhotos\t_DefaultImage.jpg" />
     <Content Include="Content\images\StudentPhotos\DefaultImage.jpg" />
     <Content Include="Content\images\trapez.jpg" />
     <Content Include="Content\images\work_1.png" />

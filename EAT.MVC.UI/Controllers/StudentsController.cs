@@ -62,6 +62,7 @@ namespace EAT.MVC.UI.Controllers
         [Authorize(Roles = "Admin")]
         public ActionResult Create([Bind(Include = "StudentId,FirstName,LastName,Major,Address,City,State,ZipCode,Phone,Email,PhotoUrl,SSID")] Student student,HttpPostedFileBase studentImage)
         {
+
             if (ModelState.IsValid)
             {
                 db.Students.Add(student);
@@ -90,6 +91,10 @@ namespace EAT.MVC.UI.Controllers
 
                     }
                     student.PhotoUrl = file;
+                }
+                else
+                {
+                    student.PhotoUrl = "DefaultImage.jpg";
                 }
                 #endregion
                 db.Students.Add(student);
@@ -132,7 +137,7 @@ namespace EAT.MVC.UI.Controllers
                 #region Image upload
                 string file = "DefaultImage.jpg";
                 if (studentImage != null)
-                
+                {
                     file = studentImage.FileName;
                     string ext = file.Substring(file.LastIndexOf('.'));
                     string[] goodExts = { ".jpeg", ".jpg", ".png", ".gif" };
@@ -140,18 +145,24 @@ namespace EAT.MVC.UI.Controllers
                     {
                         if (studentImage.ContentLength <= 4194304)
                         {
-                        file = Guid.NewGuid() + ext;
+                            file = Guid.NewGuid() + ext;
 
-                        string savePath = Server.MapPath("~/Content/images/StudentPhotos/");
-                        Image convertedImage = Image.FromStream(studentImage.InputStream);
-                        int maxImageSize = 500;
-                        int maxThumbSize = 100;
-                        ImageService.ResizeImage(savePath, file, convertedImage, maxImageSize, maxThumbSize);
+                            string savePath = Server.MapPath("~/Content/images/StudentPhotos/");
+                            Image convertedImage = Image.FromStream(studentImage.InputStream);
+                            int maxImageSize = 500;
+                            int maxThumbSize = 100;
+                            ImageService.ResizeImage(savePath, file, convertedImage, maxImageSize, maxThumbSize);
                         }
 
 
                     }
-                student.PhotoUrl = file;
+
+                    student.PhotoUrl = file;
+                }
+                else
+                {
+                    student.PhotoUrl = "DefaultImage.jpg";
+                }
                 #endregion
                 db.Entry(student).State = EntityState.Modified;
                 db.SaveChanges();

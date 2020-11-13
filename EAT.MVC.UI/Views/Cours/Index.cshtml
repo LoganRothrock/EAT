@@ -7,11 +7,10 @@
 <h2>Index</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-primary" })
+    @Html.ActionLink("View Inactive", "Inactive", "Cours", null, new { @class = "btn btn-primary "})
 </p>
-<p>
-    @Html.ActionLink("View Inactive", "Inactive", "Cours",null,new { @class = "btn btn-primary"})
-</p>
+
 <table class="table">
     <tr>
         <th>
