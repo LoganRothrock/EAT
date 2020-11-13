@@ -259,6 +259,7 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="_Archive\about.html" />
+    <Content Include="_Archive\BackupScript.sql" />
     <Content Include="_Archive\blog.html" />
     <Content Include="_Archive\contact.html" />
     <Content Include="_Archive\courses.html" />
