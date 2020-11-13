@@ -68,6 +68,7 @@ namespace Dungeon
                 Random rand = new Random();
                 do
                 {
+                    UserUI.ClearBox(setup.Boxes[2], 1, 22);
                     UserUI.TextFormatter(setup.Boxes[2], GetRoom(), 21, 1, false);
                     int randNbr = rand.Next(monsters.Length);
                     Monster monster = monsters[randNbr];
